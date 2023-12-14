@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bingo Game</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 300px;
+      margin: auto;
+    }
+
+    td {
+      border: 1px solid #ddd;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      min-width: 200px;
+      min-height: 150px;
+    }
+
+    td.empty {
+      background-color: #eee;
+    }
+
+    td.selected {
+      background-color: #aaffaa;
+    }
+
+    button {
+      background-color: #aaffaa;
+      padding: 15px;
+      border: none;
+      width: 300px;
+      height: auto;
+      display: block;
+      margin: auto;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #aaffee;
+    }
+  </style>
+</head>
+
+<body>
+  <table id="bingoTable"></table>
+  <script>
+    function generateCard() {
+      const bingoData = [
+        "Акне",
+        "Никогда не получал комплиментов",
+        "Дрочит каждый день",
+        "Слушает всякую хуйню",
+        "Анимешник",
+        "Не моется",
+        "Мало друзей в реальной жизни",
+        "Член меньше 15 см",
+        "Завидует другим мужчинам",
+        "Никогда не было девушки",
+        "Патлы или длинные волосы",
+        "Неуверенный чмошник",
+        "Нецелованный девственник",
+        "Нечего обсудить",
+        "Не пьет",
+        "Не курит",
+        "Не употребляет",
+        "Никаких физических упражнений",
+        "Не следит за одеждой",
+        "Либеральных взглядов",
+        "Лишний вес",
+        "Играет в игры",
+        "Перхоть",
+        "Не умеет общаться с девушками",
+        "Никому не нужен",
+        "Не читает книги",
+        "Не смотрит фильмы",
+        "Не выходит гулять",
+      ];
+
+      const shuffledData = bingoData.sort(() => Math.random() - 0.5);
+      const cardData = shuffledData.slice(0, 25);
+
+      const table = document.getElementById("bingoTable");
+      table.innerHTML = "";
+
+      for (let i = 0; i < 5; i++) {
+        const row = table.insertRow(i);
+        for (let j = 0; j < 5; j++) {
+          if (i === 2 && j === 2) {
+            const cell = row.insertCell(j);
+            cell.textContent = "БИНГО ИНЦЕЛА";
+            cell.classList.add("selected"); // Добавляем класс "selected"
+          } else {
+            const cell = row.insertCell(j);
+            if (cardData.length > 0) {
+              cell.textContent = cardData.pop();
+              cell.classList.remove("empty");
+              cell.addEventListener("click", () => toggleCell(cell));
+            }
+          }
+        }
+      }
+    }
+
+    function toggleCell(cell) {
+      cell.classList.toggle("selected");
+      checkBingo();
+    }
+
+    function checkBingo() {
+      const table = document.getElementById("bingoTable");
+      const rows = table.getElementsByTagName("tr");
+
+      // Check rows
+      for (let i = 0; i < rows.length; i++) {
+        if (isBingoLine(rows[i].getElementsByTagName("td"))) {
+          showCongratulations();
+          return;
+        }
+      }
+
+      // Check columns
+      for (let j = 0; j < 5; j++) {
+        const column = [];
+        for (let i = 0; i < rows.length; i++) {
+          column.push(rows[i].getElementsByTagName("td")[j]);
+        }
+        if (isBingoLine(column)) {
+          showCongratulations();
+          return;
+        }
+      }
+
+      // Check diagonals
+      const diagonal1 = [
+        rows[0].getElementsByTagName("td")[0],
+        rows[1].getElementsByTagName("td")[1],
+        rows[2].getElementsByTagName("td")[2],
+        rows[3].getElementsByTagName("td")[3],
+        rows[4].getElementsByTagName("td")[4],
+      ];
+      const diagonal2 = [
+        rows[0].getElementsByTagName("td")[4],
+        rows[1].getElementsByTagName("td")[3],
+        rows[2].getElementsByTagName("td")[2],
+        rows[3].getElementsByTagName("td")[1],
+        rows[4].getElementsByTagName("td")[0],
+      ];
+
+      if (isBingoLine(diagonal1) || isBingoLine(diagonal2)) {
+        showCongratulations();
+      }
+    }
+
+    function isBingoLine(cells) {
+      return Array.from(cells).every((cell) =>
+        cell.classList.contains("selected"),
+      );
+    }
+
+    function showCongratulations() {
+      alert("Иди помойся!");
+    }
+  </script>
+
+  <button onclick="generateCard()">ДАВАААЙ УРАА ДАА!!! ДАВАЙ!</button>
+</body>
+
+</html>
